@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>PIVOT Generator</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Richie Rump">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/pivotstyle.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        body {
+            padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarCollapseDiv">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">PIVOT Generator</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarCollapseDiv">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="https://github.com/Jorriss/PivotGenerator">GitHub Source</a></li>
+                </ul>
+                <ul class="nav pull-right navbar-nav"></ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>PIVOT Generator</h1>
+        <div style="width:520px" id="introText">
+            PIVOT queries is a very powerful tool in SQL Server. But who can really
+            remember the crazy format that the query needs to be in to get the query
+            to parse correctly. PIVOT Generator is here to help enter your query and 
+            complete a few simple steps and you'll have a working PIVOT statement. Enjoy.
+        </div>
+        <p></p>
+        <form action="javascript:void(0);">
+                <h3>Enter a query.</h3>
+                <div class="row">
+                    <!--div class="col-md-6">
+                        <div class="form-group">
+                        </div>
+                    </div-->
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label class="pull-right">
+                                <input type="checkbox" id="exampleCheck" value="" onclick="includeExample(exampleCheck.checked, langText)">
+                                Show Example Query
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <textarea id="querytext" class="form-control" rows="10">
+SELECT v.VoteTypeId,
+vt.Name
+FROM   Posts     p
+JOIN   Votes     v  ON p.Id = v.PostId
+JOIN   VoteTypes vt ON v.VoteTypeId = vt.Id
+WHERE  p.Id = 9
+                </textarea>
+            <p></p>
+            <div class="row">
+            <div class="button-padding">
+                <div style="float: left">
+                    <button id="queryButton" type="button" onclick="parseQuery();" class="btn btn-primary">Next</button>
+                </div>
+                <div style="float: right">
+                    <button id="clearButton" type="button" onclick="clearResult();" class="btn btn-default">Clear Query</button>
+                </div>
+            </div>
+            </div>
+            
+            <p></p>
+            
+            <div id="optiondiv">
+            <div class="row">
+                <div class="col-md-5">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Columns</h3>
+                    </div>
+                    <div class="panel-body fixed-panel">
+                        <div id="columnTable"></div>
+                    </div>
+                </div>
+                </div>
+                            
+                <div class="col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Aggregate</h3>
+                    </div>
+                    <div class="panel-body fixed-panel">
+                <select id="aggselect" class="form-control">
+                    <option value="avg">AVG</option>
+                    <option value="checksum_agg">CHECKSUM_AGG</option>
+                    <option value="count">COUNT</option>
+                    <option value="count_big">COUNT_BIG</option>
+                    <option value="max">MAX</option>
+                    <option value="min">MIN</option>
+                    <option value="sum">SUM</option>
+                    <option value="stdev">STDEV</option>
+                    <option value="stdevp">STDEVP</option>
+                    <option value="var">VAR</option>
+                    <option value="varp">VARP</option>
+                </select>
+                    </div>
+                </div>
+                </div>
+                
+                <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Values</h3>
+                    </div>
+                    <div class="panel-body fixed-panel">
+                        <textarea id="valuestext" class="form-control" rows="10">
+BountyStart
+DownMod
+Favorite
+UpMod</textarea>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="row">
+             <div class="button-padding">
+                <div style="float: left">
+                    <button id="generateButton" type="button" onclick="generateQuery(queryColumns)" class="btn btn-primary">Generate PIVOT</button>
+                </div>
+                <div style="float: right">
+                </div>
+            </div>
+            </div>
+</div>
+<p></p>
+            <div id="pivotdiv">
+                <textarea id="pivottext" rows="10" class="form-control"></textarea>
+            </div>
+        </form>
+    </div> <!-- Container -->
+
+    <footer class="footer">
+        <div class="container">
+            <p>Built and maintained by Richie Rump (<a href="http://www.jorriss.net">blog</a> | <a href="http://twitter.com/jorriss">twitter</a>) and the fine folks at Jorriss LLC.</p>
+            <p>version <span id="versionNumber"></span></p>
+        </div>
+    </footer>
+
+
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="pivotgen.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var queryColumns = new Array();
+        })
+    </script>
+</body>
