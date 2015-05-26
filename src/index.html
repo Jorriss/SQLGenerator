@@ -86,7 +86,7 @@ WHERE  p.Id = 9
             <div class="row">
             <div class="button-padding">
                 <div style="float: left">
-                    <button id="queryButton" type="button" onclick="parseQuery();" class="btn btn-primary">Next</button>
+                    <button id="queryButton" type="button" onclick="pivot.parseQuery(document.getElementById('querytext').value, 'columnTable');" class="btn btn-primary">Next</button>
                 </div>
                 <div style="float: right">
                     <button id="clearButton" type="button" onclick="clearResult();" class="btn btn-default">Clear Query</button>
@@ -129,7 +129,7 @@ UpMod
             <div class="row">
              <div class="button-padding">
                 <div style="float: left">
-                    <button id="generateButton" type="button" onclick="generateQuery(queryColumns)" class="btn btn-primary">Generate PIVOT</button>
+                    <button id="generateButton" type="button" onclick="generateQuery(pivot.queryColumns)" class="btn btn-primary">Generate PIVOT</button>
                 </div>
                 <div style="float: right">
                 </div>
@@ -155,9 +155,44 @@ UpMod
     <script src="js/bootstrap.min.js"></script>
     <script src="pivotgen.js"></script>
     <script type="text/javascript">
+        var pivot;
+        
         $(document).ready(function () {
 
-            var queryColumns = new Array();
-        })
+            pivot = new PivotGen();
+            
+        });
+        
+        function generateQuery(queryCols){
+            var agg = document.getElementsByName('aggRadio'),
+                pvt = document.getElementsByName('pivotRadio'),
+                disp = document.getElementsByName('displayCheckbox');
+
+            for (var i = 0, length = queryCols.length; i < length; i++) {
+                if (agg[i].checked) {
+                    queryCols[i].agg = true;
+                }
+                if (pvt[i].checked) {
+                    queryCols[i].pivot = true;
+                }
+                if (disp[i].checked) {
+                    queryCols[i].display = true;
+                }
+            }
+            document.getElementById("pivottext").value = pivot.pivotQuery(queryCols ,document.getElementById("valuestext").value, document.getElementById("querytext").value, document.getElementById("aggselect").value);
+        };
+        
+        function selectAgg(radio) {
+            var parentTarget = radio.parentNode,
+                parentSource = document.getElementById('aggSelectDiv').parentNode,
+                sourceValue = radio.value;
+            
+            $("#aggSelectDiv").appendTo(parentTarget);
+            $(radio).appendTo(parentSource);
+            document.getElementById('aggSelectRadio').checked = true;
+            radio.value = document.getElementById('aggSelectRadio').value;
+            document.getElementById('aggSelectRadio').value = sourceValue;
+        }
+
     </script>
 </body>
