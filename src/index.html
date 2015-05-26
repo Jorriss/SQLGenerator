@@ -27,7 +27,7 @@
 
 <body>
 
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarCollapseDiv">
@@ -98,51 +98,29 @@ WHERE  p.Id = 9
             
             <div id="optiondiv">
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Columns</h3>
+                        <h3 class="panel-title">Found Columns</h3>
                     </div>
                     <div class="panel-body fixed-panel">
                         <div id="columnTable"></div>
                     </div>
                 </div>
                 </div>
-                            
-                <div class="col-md-3">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Aggregate</h3>
-                    </div>
-                    <div class="panel-body fixed-panel">
-                <select id="aggselect" class="form-control">
-                    <option value="avg">AVG</option>
-                    <option value="checksum_agg">CHECKSUM_AGG</option>
-                    <option value="count">COUNT</option>
-                    <option value="count_big">COUNT_BIG</option>
-                    <option value="max">MAX</option>
-                    <option value="min">MIN</option>
-                    <option value="sum">SUM</option>
-                    <option value="stdev">STDEV</option>
-                    <option value="stdevp">STDEVP</option>
-                    <option value="var">VAR</option>
-                    <option value="varp">VARP</option>
-                </select>
-                    </div>
-                </div>
-                </div>
-                
+                                            
                 <div class="col-md-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Values</h3>
+                        <h3 class="panel-title">Pivoted Values</h3>
                     </div>
                     <div class="panel-body fixed-panel">
                         <textarea id="valuestext" class="form-control" rows="10">
 BountyStart
 DownMod
 Favorite
-UpMod</textarea>
+UpMod
+</textarea>
                     </div>
                 </div>
             </div>

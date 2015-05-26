@@ -25,6 +25,10 @@ td {
     word-wrap: break-word; /* IE 5+ */
 }
 
+.table > tbody > tr > td {
+     vertical-align: middle;
+}
+
 .container {
     width: 940px;
 }
@@ -99,6 +103,10 @@ td {
 
 .fixed-panel {
     min-height: 250px;
+}
+
+.radio-table {
+    margin-left: 12px !important;
 }
 
 .footer-column {
