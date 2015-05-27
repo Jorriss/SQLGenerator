@@ -80,7 +80,7 @@ PivotGen.prototype = (function () {
             group += '</select>';
             group += '</div><!-- /input-group -->';
         } else {
-            group += '<input type="radio" name="aggRadio" class="radio-table" onclick="selectAgg(this)" value="' + columnName + '">';
+            group += '<input type="radio" name="aggRadio" class="radio-table" onmousedown="prevSelection(this);" onclick="swapAggPivotChecked(this);" value="' + columnName + '">';
         }
 
         return group;
@@ -98,12 +98,12 @@ PivotGen.prototype = (function () {
             table += '<td class="col-md-4">' + columnNames[i].name + '</td>';
             table += '<td class="col-md-4">' + getAggRadioInputGroup(columnNames[i].name, (i === 0 ? true : false));
             table += "</td>";
-            table += "<td><input type=\"radio\" name=\"pivotRadio\" value=\"" + columnNames[i].name + "\"";
+            table += '<td><input type="radio" name="pivotRadio" onmousedown="prevSelection(this);" onclick="swapAggPivotChecked(this);" value="' + columnNames[i].name + '"';
             if (i === 1) {
                 table += " checked";
             }
             table += "></td>";
-            table += "<td><input type=\"checkbox\" name=\"displayCheckbox\" value=\"" + columnNames[i].name + "\"></td>";
+            table += '<td><input type="checkbox" name="displayCheckbox" value="' + columnNames[i].name + '"></td>';
             table += "</tr>";
         }
         table += "</tbody></table>";
@@ -116,10 +116,12 @@ PivotGen.prototype = (function () {
             i = 0;
 
         for (i = 0; i < pivotValueArr.length; i += 1) {
-            if (i > 0) {
-                values += ", ";
+            if (pivotValueArr[i].trim() != "") {
+                if (i > 0) {
+                    values += ", ";
+                }
+                values += "[" + pivotValueArr[i].trim() + "]";
             }
-            values += "[" + pivotValueArr[i].trim() + "]";
         }
         return values;
     },

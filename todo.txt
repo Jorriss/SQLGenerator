@@ -1,0 +1,76 @@
+
+
+1. Replace \n strings with a space
+
+2. Get SELECTed Columns
+// Regex to get SELECT Columns
+SELECT\s*(.*)\s*FROM
+
+3. Split SELECTed columns on ','
+
+4. Loop through each column to get column name or alias
+// Regex to get column names
+\s*(?:(?:(?:(?:.*)\s*AS\s*\[?(\w*)\]?)\s*?,?)|\[?(\w*)\]?\s?,?)+\s*
+
+5. Display box with column names and a check box that accepts one pivioted value checked and another column with checkbox that is for 'display' values
+
+6. At the same time display a text box with for values to become columns and a check box for dynamic pivot.
+
+7. At the same time display a drop down for aggrigated values
+
+AVG
+CHECKSUM_AGG
+COUNT
+COUNT_BIG
+MIN
+MAX
+SUM
+STDEV
+STDEVP
+VAR
+VARP
+
+GROUPING
+GROUPING_ID
+
+
+8. At the same tiem display a button to generate PIVOT.
+
+
+
+
+Later functionality.
+
+- Check display columns. Do we need group by.
+- Ignore blank lines in Query
+- Google Analytics.
+- No Columns found validation.
+- Add validation so display check can't be checked if pivot is checked
+- Change Name to SQL Generator
+- Add About
+- Parse column_name = syntax
+- Add tabs for SQL Type
+- Add version number
+- Add copy pivot query button
+- All values for pivot (Aaron solution)
+- ORDER BY
+- Add unit testing
+- Use template for Table?
+- Media query to change panel height when horizontal
+
+
+DONE
+- Change to Revealing Prototype Pattern
+- On click of agg radio make select active
+- Combine Agg in table?
+- Change theme so it's different from Statistics Parser
+- Add validation so AGG and PIVOT aren't checked at the same time
+- Automatically size PIVOT textarea height
+- Popover explanation
+- Add explaination for each step.
+- Ignore blank lines in Values
+- Trim values
+- Show/Hide Panels
+- Example query
+
+

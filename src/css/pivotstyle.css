@@ -29,6 +29,10 @@ td {
      vertical-align: middle;
 }
 
+.inline {
+    display: inline;
+}
+
 .container {
     width: 940px;
 }
