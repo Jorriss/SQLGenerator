@@ -103,7 +103,7 @@ PivotGen.prototype = (function () {
                 table += " checked";
             }
             table += "></td>";
-            table += '<td><input type="checkbox" name="displayCheckbox" value="' + columnNames[i].name + '"></td>';
+            table += '<td><input type="checkbox" name="displayCheckbox" onclick="verifyDisplayCheckbox(this, event);" value="' + columnNames[i].name + '"></td>';
             table += "</tr>";
         }
         table += "</tbody></table>";
@@ -150,13 +150,20 @@ PivotGen.prototype = (function () {
         }
         return name;
     },
-    getPivotColDisplay = function (columns) {
+    getPivotColDisplay = function (columns, escape) {
         var display = "",
             i = 0;
 
         for (i = 0; i < columns.length; i += 1) {
             if (columns[i].display === true) {
-                display += columns[i].name + ", ";
+                if (escape) {
+                    display += "[";
+                }
+                display += columns[i].name 
+                if (escape) {
+                    display += "]";
+                }
+                display += ", ";
             }
         }
         return display;
@@ -178,7 +185,7 @@ PivotGen.prototype = (function () {
         var values = getPivotValues(pivotValues),
             pivot = "";
             
-        pivot += "SELECT " + getPivotColDisplay(columns) + values + "\n";
+        pivot += "SELECT " + getPivotColDisplay(columns, true) + values + "\n";
         pivot += "FROM (\n";
         pivot += query + "\n";
         pivot += ") AS sourceTable\n";

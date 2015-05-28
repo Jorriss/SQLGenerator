@@ -41,13 +41,13 @@ GROUPING_ID
 
 Later functionality.
 
-- Check display columns. Do we need group by.
 - Ignore blank lines in Query
 - Google Analytics.
 - No Columns found validation.
 - Add validation so display check can't be checked if pivot is checked
 - Change Name to SQL Generator
 - Add About
+- Change DOM Functions to Revaealing Prototype Pattern
 - Parse column_name = syntax
 - Add tabs for SQL Type
 - Add version number
@@ -72,5 +72,6 @@ DONE
 - Trim values
 - Show/Hide Panels
 - Example query
-
+- Clear Query/Result works
+- Check display columns. Do we need group by.
 

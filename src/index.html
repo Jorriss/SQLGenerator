@@ -100,7 +100,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Found Columns
-                            <a tabindex="0" id="queryHelp" data-toggle="popover" data-html="true" data-trigger="focus" title="Found Columns" data-content='<p>The following list are the columns that were found in your query. You need to choose one column to be aggregated and another to be pivoted. </p>The <b>Agg</b> column determines which column and which function the query will use to aggregate the data.</p><p>The <b>Pivot</b> column deteremines the column where the rows will become values. You can specifiy the data values that will become rows in the "Pivoted Values" box.</p><p>The <b>Display</b> column determines wheither or not the column will be shown in the PIVOT query.</p>'>
+                            <a tabindex="0" id="queryHelp" data-toggle="popover" data-html="true" data-placement="top" data-trigger="focus" title="Found Columns" data-content='<p>The following list are the columns that were found in your query. You need to choose one column to be aggregated and another to be pivoted. </p>The <b>Agg</b> column determines which column and which function the query will use to aggregate the data.</p><p>The <b>Pivot</b> column deteremines the column where the rows will become values. You can specifiy the data values that will become rows in the "Pivoted Values" box.</p><p>The <b>Display</b> column determines wheither or not the column will be shown in the PIVOT query.</p>'>
                             <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
                         </h3>
                     </div>
@@ -142,7 +142,8 @@
             </div>
         </form>
         <div id="exampleQuery" style="display: none">SELECT v.VoteTypeId,
-vt.Name
+       vt.Name,
+       p.Title
 FROM   Posts     p
 JOIN   Votes     v  ON p.Id = v.PostId
 JOIN   VoteTypes vt ON v.VoteTypeId = vt.Id
@@ -176,6 +177,15 @@ UpMod
                 $('[data-toggle="popover"]').popover()
             })
         });
+        
+        function verifyDisplayCheckbox(element, event) {
+            var pivotEl = $("[name=pivotRadio]:checked").val(),
+                aggEl = $("[name=aggRadio]:checked").val(),
+                evEl = element.value;
+            if (pivotEl === evEl || aggEl === evEl) {
+                event.preventDefault();
+            }
+        };
         
         function showElement(name){
             var optionDiv = document.getElementById(name);
@@ -269,6 +279,7 @@ UpMod
         
         function swapAggPivotChecked(element) {
             var sameVal = checkSameValue('pivotRadio', 'aggRadio')
+            $("[name=displayCheckbox][value=" + element.value + "]")[0].checked = false;
             if (element.name === 'pivotRadio') {
                 if (sameVal) {
                     selectAggMove($("[name=aggRadio][value=" + prevElement.value + "]")[0]);
