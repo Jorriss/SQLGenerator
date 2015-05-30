@@ -35,7 +35,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">PIVOT Generator</a>
+                <a class="navbar-brand" href="#">SQL Generator</a>
             </div>
             <div class="collapse navbar-collapse" id="navbarCollapseDiv">
                 <ul class="nav navbar-nav">
@@ -50,6 +50,16 @@
     </div>
 
     <div class="container">
+
+<ul class="nav nav-tabs" role="tablist" id="myTab">
+  <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">PIVOT</a></li>
+</ul>
+
+
+<div class="tab-content">
+  <div role="tabpanel" class="tab-pane active" id="home">
+
+
         <h1>PIVOT Generator</h1>
         <div style="width:520px" id="introText">
             PIVOT queries is a very powerful tool in SQL Server. But who can really
@@ -153,6 +163,9 @@ DownMod
 Favorite
 UpMod
 </div>
+
+</div> <!--tab-content -->
+</div> <!-- tabpanel -->
     </div> <!-- Container -->
 
     <footer class="footer">
@@ -178,6 +191,10 @@ UpMod
             })
         });
         
+        $(function () {
+            $('#myTab a:last').tab('show')
+        });
+          
         function verifyDisplayCheckbox(element, event) {
             var pivotEl = $("[name=pivotRadio]:checked").val(),
                 aggEl = $("[name=aggRadio]:checked").val(),

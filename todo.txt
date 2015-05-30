@@ -39,17 +39,14 @@ GROUPING_ID
 
 
 
-Later functionality.
+Tasks
 
 - Ignore blank lines in Query
 - Google Analytics.
-- No Columns found validation.
-- Add validation so display check can't be checked if pivot is checked
-- Change Name to SQL Generator
+- No/One Columns found validation.
 - Add About
 - Change DOM Functions to Revaealing Prototype Pattern
 - Parse column_name = syntax
-- Add tabs for SQL Type
 - Add version number
 - Add copy pivot query button
 - All values for pivot (Aaron solution)
@@ -74,4 +71,7 @@ DONE
 - Example query
 - Clear Query/Result works
 - Check display columns. Do we need group by.
+- Add validation so display check can't be checked if pivot is checked
+- Change Name to SQL Generator
+- Add tabs for SQL Type
 

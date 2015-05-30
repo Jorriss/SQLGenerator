@@ -25,6 +25,10 @@ td {
     word-wrap: break-word; /* IE 5+ */
 }
 
+textarea {
+    font-family: 'Lucida Console', 'Lucida Sans Typewriter', monaco, 'Bitstream Vera Sans Mono';
+}
+
 .table > tbody > tr > td {
      vertical-align: middle;
 }
