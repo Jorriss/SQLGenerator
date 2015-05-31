@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+   <title>SQL Generator</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Richie Rump">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/sqlgenstyle.css" rel="stylesheet">
+     <style>
+        body {
+            padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+        }
+    </style>
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.html">SQL Generator</a>
+            </div>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarCollapseDiv">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+                
+            <div class="collapse navbar-collapse" id="navbarCollapseDiv">
+                <ul class="nav navbar-nav">
+                    <li><a href="index.html">Home</a></li>
+                    <li class="active"><a href="#">About</a></li>
+                    <li><a href="https://github.com/Jorriss/sqlgenerator">GitHub Source</a></li>
+                </ul>
+                <ul class="nav pull-right navbar-nav">
+                    <li><a href="http://jorriss.net">Jorriss.net</a></li>
+                </ul>
+            </div> <!--/.nav-collapse -->
+        </div>
+    </div>
+
+    <div class="container">
+
+        <h1>SQL Generator</h1>
+        <div class="row">
+            <div class="col-md-8">
+                <p>
+                    SQL can be a tricky thing. The syntax and keywords change from platfom to platfom and sometimes even version to version. Knowing how to write every kind of SQL query takes hours writing queries and reading documentation. That's where this site comes in. SQLGenerator.net helps you write those tricky SQL statements. Right now we only support the creation of PIVOT statements for SQL Server; but we have plans for more statements and platforms.
+                </p>
+                <p>
+                    I hope you find this site useful. If you have any questions or comments feel free to hit me up over on my <a href="http://www.jorriss.net/contact">website</a> or <a href="http://twitter.com/jorriss">twitter</a>. Enjoy.
+                </p>
+                <p>Richie</p>
+
+                <p>&nbsp;</p>
+            </div>
+        </div>
+    </div> <!-- /container -->
+
+    <footer class="footer">
+        <div class="container">
+            <p>Built and maintained by Richie Rump (<a href="http://www.jorriss.net">website</a> | <a href="http://twitter.com/jorriss">twitter</a>) and the fine folks at Jorriss LLC.</p>
+            <p>version <span id="versionNumber"></span></p>
+        </div>
+    </footer>
+
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/sqlgen.js"></script>
+   
+    <script>
+        versionNumber();
+    </script>
+</body>
+</html>
+
+

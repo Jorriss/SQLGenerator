@@ -1,8 +1,8 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>PIVOT Generator</title>
+    <title>SQL Generator</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,7 +10,7 @@
     <meta name="author" content="Richie Rump">
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/pivotstyle.css" rel="stylesheet">
+    <link href="css/sqlgenstyle.css" rel="stylesheet">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -43,158 +43,190 @@
                     <li><a href="about.html">About</a></li>
                     <li><a href="https://github.com/Jorriss/sqlgenerator">GitHub Source</a></li>
                 </ul>
-                <ul class="nav pull-right navbar-nav"></ul>
+                <ul class="nav pull-right navbar-nav">
+                    <li><a href="http://jorriss.net">Jorriss.net</a></li>
+                </ul>
             </div>
             <!--/.nav-collapse -->
         </div>
     </div>
+    <form action="javascript:void(0);">
 
-    <div class="container">
+        <div class="container">
 
-<ul class="nav nav-tabs" role="tablist" id="myTab">
-  <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">PIVOT</a></li>
-</ul>
-
-
-<div class="tab-content">
-  <div role="tabpanel" class="tab-pane active" id="home">
+            <ul class="nav nav-tabs" role="tablist" id="myTab">
+                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">PIVOT</a></li>
+            </ul>
 
 
-        <h1>PIVOT Generator</h1>
-        <div style="width:520px" id="introText">
-            PIVOT queries is a very powerful tool in SQL Server. But who can really
-            remember the crazy format that the query needs to be in to get the query
-            to parse correctly. PIVOT Generator is here to help enter your query and 
-            complete a few simple steps and you'll have a working PIVOT statement. Enjoy.
-        </div>
-        <p></p>
-        <form action="javascript:void(0);">
-                <div class="row">
-                    <div class="col-md-6"">
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="home">
+
+
+                    <h1>PIVOT Generator</h1>
+                    <div style="width:520px" id="introText">
+                        PIVOT queries is a very powerful tool in SQL Server. But who can really
+                        remember the crazy format that the query needs to be in to get the query
+                        to parse correctly. PIVOT Generator is here to help enter your query and
+                        complete a few simple steps and you'll have a working PIVOT statement. Enjoy.
+                    </div>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div name="divheader">
+                                <h3 class=" inline">
+                                    Enter a query.
+                                    <a tabindex="0" id="queryHelp" data-toggle="popover" data-trigger="focus" title="Enter a query" data-content="In order to create your PIVOT we first need a query where the data will originate from. This query must contain at least two columns. And no 'SELECT *' queries. This tool needs the column names to work!">
+                                        <span class="glyphicon glyphicon-question-sign small" aria-hidden="true"></span>
+                                    </a>
+                                </h3>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+                            <div class="checkbox">
+                                <label class="pull-right">
+                                    <input type="checkbox" id="exampleCheck" value="" onclick="includeExample(exampleCheck.checked)">
+                                    Show Example Query
+                                </label>
+                            </div>
+                        </div>
                         <div>
-                            <h3 class="inline">Enter a query.
-                            <a tabindex="0" id="queryHelp" data-toggle="popover" data-trigger="focus" title="Enter a query" data-content="In order to create your PIVOT we first need a query where the data will originate from. This query must contain at least two columns. And no 'SELECT *' queries. This tool needs the column names to work!">
-                                <span class="glyphicon glyphicon-question-sign small" aria-hidden="true"></span></a>
-                                    </h3>
+                            <textarea id="querytext" class="form-control" rows="10"></textarea>
+                            <p></p>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="checkbox">
-                            <label class="pull-right">
-                                <input type="checkbox" id="exampleCheck" value="" onclick="includeExample(exampleCheck.checked)">
-                                Show Example Query
-                            </label>
+                        <div class="row">
+                            <div class="button-padding">
+                                <div style="float: left">
+                                    <button id="queryButton" type="button" onclick="pivot.parseQuery(document.getElementById('querytext').value, 'columnTable'); submitQuery();" class="btn btn-primary">Next</button>
+                                </div>
+                                <div style="float: right">
+                                    <button id="clearButton" type="button" onclick="clearResult();" class="btn btn-default">Clear Query</button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-          <div>
-                <textarea id="querytext" class="form-control" rows="10"></textarea>
-            <p></p>
-            </div>
-            <div class="row">
-            <div class="button-padding">
-                <div style="float: left">
-                    <button id="queryButton" type="button" onclick="pivot.parseQuery(document.getElementById('querytext').value, 'columnTable'); submitQuery();" class="btn btn-primary">Next</button>
-                </div>
-                <div style="float: right">
-                    <button id="clearButton" type="button" onclick="clearResult();" class="btn btn-default">Clear Query</button>
-                </div>
-            </div>
-            </div>
-            
-            <p></p>
-            
-            <div id="optiondiv" style="display: none;">
-            <div class="row">
-                <div class="col-md-8">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Found Columns
-                            <a tabindex="0" id="queryHelp" data-toggle="popover" data-html="true" data-placement="top" data-trigger="focus" title="Found Columns" data-content='<p>The following list are the columns that were found in your query. You need to choose one column to be aggregated and another to be pivoted. </p>The <b>Agg</b> column determines which column and which function the query will use to aggregate the data.</p><p>The <b>Pivot</b> column deteremines the column where the rows will become values. You can specifiy the data values that will become rows in the "Pivoted Values" box.</p><p>The <b>Display</b> column determines wheither or not the column will be shown in the PIVOT query.</p>'>
-                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
-                        </h3>
-                    </div>
-                    <div class="panel-body fixed-panel">
-                        <div id="columnTable"></div>
-                    </div>
-                </div>
-                </div>
-                                            
-                <div class="col-md-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Pivoted Values
-                            <a tabindex="0" id="queryHelp" data-toggle="popover" data-html="true" data-placement="top" data-trigger="focus" title="Pivoted Values" data-content='<p>In order to turn your rows into columns you need to choose which pivoted column values will be turned into a column. You will need to provide actual data values from the pivoted column. One value per line</p><p>Example:<br/>If the "Salesperson_Name" column was selected to be pivoted and we wanted four salesperson values to become columns the following values would be in this textbox:</p><p>Paul Randal<br/>Kendra Little<br/>Kendal Van Dyke<br/>Brent Ozar<br/></p>'>
-                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
-                        </h3>
-                    </div>
-                    <div class="panel-body fixed-panel">
-                        <textarea id="valuestext" class="form-control" rows="10"></textarea>
-                    </div>
-                </div>
-            </div>
-            </div>
 
-            <div class="row">
-             <div class="button-padding">
-                <div style="float: left">
-                    <button id="generateButton" type="button" onclick="showElement('pivotdiv'); generateQuery(pivot.queryColumns);" class="btn btn-primary">Generate PIVOT</button>
-                </div>
-                <div style="float: right">
-                </div>
-            </div>
-            </div>
-</div>
-<p></p>
-            <div id="pivotdiv" style="display: none;">
-                <h3>Your PIVOT query</h3>
-                <textarea id="pivottext" rows="10" class="form-control"></textarea>
-            </div>
-        </form>
-        <div id="exampleQuery" style="display: none">SELECT v.VoteTypeId,
+                        <p></p>
+
+                        <div id="optiondiv" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">
+                                                Found Columns
+                                                <a tabindex="0" id="queryHelp" data-toggle="popover" data-html="true" data-placement="top" data-trigger="focus" title="Found Columns" data-content='<p>The following list are the columns that were found in your query. You need to choose one column to be aggregated and another to be pivoted. </p>The <b>Agg</b> column determines which column and which function the query will use to aggregate the data.</p><p>The <b>Pivot</b> column deteremines the column where the rows will become values. You can specifiy the data values that will become rows in the "Pivoted Values" box.</p><p>The <b>Display</b> column determines wheither or not the column will be shown in the PIVOT query.</p>'>
+                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
+                                            </h3>
+                                        </div>
+                                        <div class="panel-body fixed-panel">
+                                            <div id="columnTable"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">
+                                                Pivoted Values
+                                                <a tabindex="0" id="queryHelp" data-toggle="popover" data-html="true" data-placement="top" data-trigger="focus" title="Pivoted Values" data-content='<p>In order to turn your rows into columns you need to choose which pivoted column values will be turned into a column. You will need to provide actual data values from the pivoted column. One value per line</p><p>Example:<br/>If the "Salesperson_Name" column was selected to be pivoted and we wanted four salesperson values to become columns the following values would be in this textbox:</p><p>Paul Randal<br/>Kendra Little<br/>Kendal Van Dyke<br/>Brent Ozar<br/></p>'>
+                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
+                                            </h3>
+                                        </div>
+                                        <div class="panel-body fixed-panel">
+                                            <textarea id="valuestext" class="form-control" rows="10"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="button-padding">
+                                    <div style="float: left">
+                                        <button id="generateButton" type="button" onclick="showElement('pivotdiv'); generateQuery(pivot.queryColumns);" class="btn btn-primary">Generate PIVOT</button>
+                                    </div>
+                                    <div style="float: right">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- optiondiv -->
+                        <p></p>
+                        <div id="pivotdiv" style="display: none;">
+                            <h3>Your PIVOT query</h3>
+                            <div>
+                                <textarea id="pivottext" rows="10" class="form-control"></textarea>
+                                    <p></p>
+                            </div>
+                            <div>
+                                <div style="float: left">
+                                    <button id="copyPivotButton" type="button" data-clipboard-target="pivottext" class="btn btn-primary">Copy To Clipboard</button>
+                                         &nbsp;&nbsp
+                                    <span id="pivotQueryCopied" class="text-info" style="display: none;">
+                                        PIVOT Query Copied!
+                                    </span>
+                                </div>
+                                <div style="float: right">
+                                    &nbsp;
+                                </div>
+                            </div>
+                                
+                        </div>
+                        <div id="exampleQuery" style="display: none">SELECT v.VoteTypeId,
        vt.Name,
        p.Title
 FROM   Posts     p
 JOIN   Votes     v  ON p.Id = v.PostId
 JOIN   VoteTypes vt ON v.VoteTypeId = vt.Id
 WHERE  p.Id = 9</div>
-        <div id="exampleValues" style="display: none">BountyStart
+                        <div id="exampleValues" style="display: none">BountyStart
 DownMod
 Favorite
-UpMod
-</div>
-
-</div> <!--tab-content -->
-</div> <!-- tabpanel -->
-    </div> <!-- Container -->
+UpMod</div>
+                    </div>
+                </div> <!-- tabpanel -->
+            </div> <!--tab-content -->
+        </div> <!-- Container -->
+    </form>
 
     <footer class="footer">
         <div class="container">
-            <p>Built and maintained by Richie Rump (<a href="http://www.jorriss.net">blog</a> | <a href="http://twitter.com/jorriss">twitter</a>) and the fine folks at Jorriss LLC.</p>
+            <p>Built and maintained by Richie Rump (<a href="http://www.jorriss.net">website</a> | <a href="http://twitter.com/jorriss">twitter</a>) and the fine folks at Jorriss LLC.</p>
             <p>version <span id="versionNumber"></span></p>
         </div>
     </footer>
 
 
-    <script src="js/jquery-2.1.4.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="pivotgen.js"></script>
+    <script src="js/jquery-2.1.4.min.js" type="text/javascript"></script>
+    <script src="js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="js/pivotgen.js" type="text/javascript"></script>
+    <script src="js/ZeroClipboard.min.js" type="text/javascript"></script>
     <script type="text/javascript">
         var pivot,
             prevElement;
-        
+
         $(document).ready(function () {
 
+            var client = new ZeroClipboard($("#copyPivotButton"));
+            
+            client.on( 'ready', function(event) {
+
+                client.on( 'aftercopy', function(event) {
+                    $("#pivotQueryCopied").show().delay(3000).fadeToggle("slow", "linear" );
+                } );
+            } );
+            
             pivot = new PivotGen();
             $(function () {
                 $('[data-toggle="popover"]').popover()
             })
         });
-        
+
         $(function () {
             $('#myTab a:last').tab('show')
         });
-          
+        
         function verifyDisplayCheckbox(element, event) {
             var pivotEl = $("[name=pivotRadio]:checked").val(),
                 aggEl = $("[name=aggRadio]:checked").val(),
@@ -203,17 +235,17 @@ UpMod
                 event.preventDefault();
             }
         };
-        
-        function showElement(name){
+
+        function showElement(name) {
             var optionDiv = document.getElementById(name);
-            
+
             if (optionDiv.style.display === "none") {
                 setDisplay(optionDiv, true);
             }
         };
-                
+
         function setDisplay(obj, val) {
-            if(val === true) {
+            if (val === true) {
                 obj.style.display = 'block';
             } else {
                 obj.style.display = 'none';
@@ -230,8 +262,8 @@ UpMod
             }
         };
         function submitQuery() {
-             showElement('optiondiv');
-             document.getElementById('clearButton').innerHTML = "Clear Results";
+            showElement('optiondiv');
+            document.getElementById('clearButton').innerHTML = "Clear Results";
         };
 
         function clearResult() {
@@ -243,8 +275,8 @@ UpMod
                 document.getElementById("querytext").value = '';
             }
         };
-        
-        function generateQuery(queryCols){
+
+        function generateQuery(queryCols) {
             var agg = document.getElementsByName('aggRadio'),
                 pvt = document.getElementsByName('pivotRadio'),
                 disp = document.getElementsByName('displayCheckbox');
@@ -260,40 +292,40 @@ UpMod
                     queryCols[i].display = true;
                 }
             }
-            document.getElementById("pivottext").value = pivot.pivotQuery(queryCols ,document.getElementById("valuestext").value, document.getElementById("querytext").value, document.getElementById("aggselect").value);
+            document.getElementById("pivottext").value = pivot.pivotQuery(queryCols, document.getElementById("valuestext").value, document.getElementById("querytext").value, document.getElementById("aggselect").value);
             textAreaAdjust(document.getElementById("pivottext"));
-        };
-        
-        function getCheckedElement(elementName) {
-            var el = document.getElementsByName(elementName),
-                returnEl;
-                
-            for (var i = 0, length = el.length; i < length; i++) {
-                if (el[i].checked) {
-                    returnEl = el[i];
-                    break;
-                }
-            }
-            return returnEl;  
         };
 
         function getCheckedElement(elementName) {
             var el = document.getElementsByName(elementName),
                 returnEl;
-                
+
             for (var i = 0, length = el.length; i < length; i++) {
                 if (el[i].checked) {
                     returnEl = el[i];
                     break;
                 }
             }
-            return returnEl;  
+            return returnEl;
         };
-        
+
+        function getCheckedElement(elementName) {
+            var el = document.getElementsByName(elementName),
+                returnEl;
+
+            for (var i = 0, length = el.length; i < length; i++) {
+                if (el[i].checked) {
+                    returnEl = el[i];
+                    break;
+                }
+            }
+            return returnEl;
+        };
+
         function prevSelection(element) {
             prevElement = $("[name=" + element.name + "]:checked")[0];
         };
-        
+
         function swapAggPivotChecked(element) {
             var sameVal = checkSameValue('pivotRadio', 'aggRadio')
             $("[name=displayCheckbox][value=" + element.value + "]")[0].checked = false;
@@ -303,40 +335,40 @@ UpMod
                 }
             }
             else {
-                if (sameVal) { 
+                if (sameVal) {
                     $("[name=pivotRadio][value=" + prevElement.value + "]")[0].checked = true;
                 }
                 selectAggMove(element);
             }
         };
-        
+
         function checkSameValue(pivotName, aggName) {
             var pivotEl = $("[name=" + pivotName + "]:checked").val(),
                 aggEl = $("[name=" + aggName + "]:checked").val(),
                 returnVal = false;
-                
+
             if (pivotEl === aggEl) {
                 returnVal = true;
             }
             return returnVal;
         };
-        
+
         function selectAggMove(radio) {
             var parentTarget = radio.parentNode,
                 parentSource = document.getElementById('aggSelectDiv').parentNode,
                 sourceValue = radio.value;
-            
+
             $("#aggSelectDiv").appendTo(parentTarget);
             $(radio).appendTo(parentSource);
             document.getElementById('aggSelectRadio').checked = true;
             radio.value = document.getElementById('aggSelectRadio').value;
             document.getElementById('aggSelectRadio').value = sourceValue;
         }
-        
+
         function textAreaAdjust(o) {
             o.style.height = "1px";
-            o.style.height = (25+o.scrollHeight)+"px";
+            o.style.height = (25 + o.scrollHeight) + "px";
         }
-        
+
     </script>
 </body>
