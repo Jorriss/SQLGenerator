@@ -91,14 +91,20 @@
                                 </label>
                             </div>
                         </div>
-                        <div>
-                            <textarea id="querytext" class="form-control" rows="10"></textarea>
-                            <p></p>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <textarea id="querytext" name="querytext" class="form-control input-validation-error" rows="10"></textarea>
+                                    <span id="querytextError" name="querytextError" class="text-danger field-validation-error" data-valmsg-for="querytext"
+          data-valmsg-replace="true" style="display: none"></span>
+                                    <p></p>
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
-                            <div class="button-padding">
+                            <div class="col-md-12 button-padding">
                                 <div style="float: left">
-                                    <button id="queryButton" type="button" onclick="pivot.parseQuery(document.getElementById('querytext').value, 'columnTable'); submitQuery();" class="btn btn-primary">Next</button>
+                                    <button id="queryButton" type="button" onclick="pivot.parseQuery(document.getElementById('querytext').value, 'columnTable'); submitQuery(pivot.queryColumns);" class="btn btn-primary">Next</button>
                                 </div>
                                 <div style="float: right">
                                     <button id="clearButton" type="button" onclick="clearResult();" class="btn btn-default">Clear Query</button>
@@ -142,9 +148,9 @@
                             </div>
 
                             <div class="row">
-                                <div class="button-padding">
+                                <div class="col-md-12 button-padding">
                                     <div style="float: left">
-                                        <button id="generateButton" type="button" onclick="showElement('pivotdiv'); generateQuery(pivot.queryColumns);" class="btn btn-primary">Generate PIVOT</button>
+                                        <button id="generateButton" type="button" onclick="showElement('pivotdiv', true); generateQuery(pivot.queryColumns);" class="btn btn-primary">Generate PIVOT</button>
                                     </div>
                                     <div style="float: right">
                                         &nbsp;
@@ -159,7 +165,8 @@
                                 <textarea id="pivottext" rows="10" class="form-control"></textarea>
                                     <p></p>
                             </div>
-                            <div>
+                            <div class="row">
+                                <div class="col-md-12 button-padding">
                                 <div style="float: left">
                                     <button id="copyPivotButton" type="button" data-clipboard-target="pivottext" class="btn btn-primary">Copy To Clipboard</button>
                                          &nbsp;&nbsp
@@ -169,6 +176,7 @@
                                 </div>
                                 <div style="float: right">
                                     &nbsp;
+                                </div>
                                 </div>
                             </div>
                                 
@@ -200,8 +208,9 @@ UpMod</div>
 
     <script src="js/jquery-2.1.4.min.js" type="text/javascript"></script>
     <script src="js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="js/pivotgen.js" type="text/javascript"></script>
     <script src="js/ZeroClipboard.min.js" type="text/javascript"></script>
+    <script src="js/pivotgen.js" type="text/javascript"></script>
+    <script src="js/sqlgen.js" type="text/javascript"></script>
     <script type="text/javascript">
         var pivot,
             prevElement;
@@ -219,28 +228,33 @@ UpMod</div>
             
             pivot = new PivotGen();
             $(function () {
-                $('[data-toggle="popover"]').popover()
+                $('[data-toggle="popover"]').popover();
             })
+            
+            versionNumber();
         });
 
         $(function () {
-            $('#myTab a:last').tab('show')
+            $('#myTab a:last').tab('show');
         });
         
         function verifyDisplayCheckbox(element, event) {
             var pivotEl = $("[name=pivotRadio]:checked").val(),
                 aggEl = $("[name=aggRadio]:checked").val(),
                 evEl = element.value;
+                
             if (pivotEl === evEl || aggEl === evEl) {
                 event.preventDefault();
             }
         };
 
-        function showElement(name) {
+        function showElement(name, show) {
             var optionDiv = document.getElementById(name);
 
-            if (optionDiv.style.display === "none") {
+            if (show === true) {
                 setDisplay(optionDiv, true);
+            } else {
+                setDisplay(optionDiv, false);
             }
         };
 
@@ -261,9 +275,39 @@ UpMod</div>
                 document.getElementById("valuestext").value = "";
             }
         };
-        function submitQuery() {
-            showElement('optiondiv');
-            document.getElementById('clearButton').innerHTML = "Clear Results";
+        function submitQuery(queryCols) {
+            var isError = false,
+                queryErrorText = "",
+                i;
+
+            if (queryCols.length <= 1) {
+                isError = true;
+                queryErrorText = "There needs to be at least two columns in the query.";
+            }
+
+            for (i = 0; i < queryCols.length; i += 1) {
+                if (queryCols[i].name === "*") {
+                    isError = true;
+                    if (queryErrorText !== "") { queryErrorText += "<br />"; }
+                    queryErrorText += "You cannot use '*' in the PIVOT generator."
+                    break;
+                }
+            }
+            
+            if (isError) {
+                showElement('optiondiv', false);
+                showElement('pivotdiv', false);
+                $('.input-validation-error').parents('.form-group').addClass('has-error');
+                $('.field-validation-error').addClass('text-danger');
+                $('#querytextError').html(queryErrorText);
+                showElement('querytextError', true);
+            } else {
+                showElement('optiondiv', true);
+                document.getElementById('clearButton').innerHTML = "Clear Results";
+                $('.input-validation-error').parents('.form-group').removeClass('has-error');
+                $('.field-validation-error').removeClass('text-danger');
+                showElement('querytextError', false);
+            }
         };
 
         function clearResult() {

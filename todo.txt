@@ -43,10 +43,9 @@ Tasks
 - Ignore blank lines in Query
 - Google Analytics.
 - Fav Icon (index, about)
-- No/One Columns found validation.
 - Change DOM Functions to Revaealing Prototype Pattern
+
 - Parse column_name = syntax
-- Add copy pivot query button
 - All values for pivot (Aaron solution)
 - Video on how pivot tables work.
 - ORDER BY
@@ -75,4 +74,6 @@ DONE
 - Add tabs for SQL Type
 - Add About
 - Add version number
+- Add copy pivot query button
+- No/One Columns found validation.
 
