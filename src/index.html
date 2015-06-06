@@ -86,7 +86,7 @@
                         <div class="col-md-6">
                             <div class="checkbox">
                                 <label class="pull-right">
-                                    <input type="checkbox" id="exampleCheck" value="" onclick="includeExample(exampleCheck.checked)">
+                                    <input type="checkbox" id="exampleCheck" value="" onclick="pivotDom.includeExample(exampleCheck.checked)">
                                     Show Example Query
                                 </label>
                             </div>
@@ -104,10 +104,10 @@
                         <div class="row">
                             <div class="col-md-12 button-padding">
                                 <div style="float: left">
-                                    <button id="queryButton" type="button" onclick="pivot.parseQuery(document.getElementById('querytext').value, 'columnTable'); submitQuery(pivot.queryColumns);" class="btn btn-primary">Next</button>
+                                    <button id="queryButton" type="button" onclick="pivotDom.queryParseSubmit(document.getElementById('querytext').value, 'columnTable');" class="btn btn-primary">Next</button>
                                 </div>
                                 <div style="float: right">
-                                    <button id="clearButton" type="button" onclick="clearResult();" class="btn btn-default">Clear Query</button>
+                                    <button id="clearButton" type="button" onclick="pivotDom.clearResult();" class="btn btn-default">Clear Query</button>
                                 </div>
                             </div>
                         </div>
@@ -150,7 +150,7 @@
                             <div class="row">
                                 <div class="col-md-12 button-padding">
                                     <div style="float: left">
-                                        <button id="generateButton" type="button" onclick="showElement('pivotdiv', true); generateQuery(pivot.queryColumns);" class="btn btn-primary">Generate PIVOT</button>
+                                        <button id="generateButton" type="button" onclick="sqlGen.showElement('pivotdiv', true); pivotDom.generateQuery();" class="btn btn-primary">Generate PIVOT</button>
                                     </div>
                                     <div style="float: right">
                                         &nbsp;
@@ -209,11 +209,12 @@ UpMod</div>
     <script src="js/jquery-2.1.4.min.js" type="text/javascript"></script>
     <script src="js/bootstrap.min.js" type="text/javascript"></script>
     <script src="js/ZeroClipboard.min.js" type="text/javascript"></script>
-    <script src="js/pivotgen.js" type="text/javascript"></script>
     <script src="js/sqlgen.js" type="text/javascript"></script>
+    <script src="js/pivotgendom.js" type="text/javascript"></script>
+    <script src="js/pivotgen.js" type="text/javascript"></script>
     <script type="text/javascript">
-        var pivot,
-            prevElement;
+        var sqlGen,
+            pivotDom;
 
         $(document).ready(function () {
 
@@ -226,193 +227,20 @@ UpMod</div>
                 } );
             } );
             
-            pivot = new PivotGen();
+            sqlGen = new SqlGen();
+            pivotDom = new PivotGenDom(sqlGen);
+
             $(function () {
                 $('[data-toggle="popover"]').popover();
-            })
+            });
             
-            versionNumber();
+            sqlGen.versionNumber(document.getElementById("versionNumber"));
         });
 
         $(function () {
             $('#myTab a:last').tab('show');
         });
         
-        function verifyDisplayCheckbox(element, event) {
-            var pivotEl = $("[name=pivotRadio]:checked").val(),
-                aggEl = $("[name=aggRadio]:checked").val(),
-                evEl = element.value;
-                
-            if (pivotEl === evEl || aggEl === evEl) {
-                event.preventDefault();
-            }
-        };
-
-        function showElement(name, show) {
-            var optionDiv = document.getElementById(name);
-
-            if (show === true) {
-                setDisplay(optionDiv, true);
-            } else {
-                setDisplay(optionDiv, false);
-            }
-        };
-
-        function setDisplay(obj, val) {
-            if (val === true) {
-                obj.style.display = 'block';
-            } else {
-                obj.style.display = 'none';
-            }
-        };
-
-        function includeExample(checked) {
-            if (checked == true) {
-                document.getElementById("querytext").value = document.getElementById("exampleQuery").innerHTML;
-                document.getElementById("valuestext").value = document.getElementById("exampleValues").innerHTML;
-            } else {
-                document.getElementById("querytext").value = "";
-                document.getElementById("valuestext").value = "";
-            }
-        };
-        function submitQuery(queryCols) {
-            var isError = false,
-                queryErrorText = "",
-                i;
-
-            if (queryCols.length <= 1) {
-                isError = true;
-                queryErrorText = "There needs to be at least two columns in the query.";
-            }
-
-            for (i = 0; i < queryCols.length; i += 1) {
-                if (queryCols[i].name === "*") {
-                    isError = true;
-                    if (queryErrorText !== "") { queryErrorText += "<br />"; }
-                    queryErrorText += "You cannot use '*' in the PIVOT generator."
-                    break;
-                }
-            }
-            
-            if (isError) {
-                showElement('optiondiv', false);
-                showElement('pivotdiv', false);
-                $('.input-validation-error').parents('.form-group').addClass('has-error');
-                $('.field-validation-error').addClass('text-danger');
-                $('#querytextError').html(queryErrorText);
-                showElement('querytextError', true);
-            } else {
-                showElement('optiondiv', true);
-                document.getElementById('clearButton').innerHTML = "Clear Results";
-                $('.input-validation-error').parents('.form-group').removeClass('has-error');
-                $('.field-validation-error').removeClass('text-danger');
-                showElement('querytextError', false);
-            }
-        };
-
-        function clearResult() {
-            if (document.getElementById("clearButton").innerHTML === 'Clear Results') {
-                setDisplay(document.getElementById('optiondiv'), false);
-                setDisplay(document.getElementById('pivotdiv'), false);
-                document.getElementById("clearButton").innerHTML = 'Clear Query';
-            } else if (document.getElementById("clearButton").innerHTML === 'Clear Query') {
-                document.getElementById("querytext").value = '';
-            }
-        };
-
-        function generateQuery(queryCols) {
-            var agg = document.getElementsByName('aggRadio'),
-                pvt = document.getElementsByName('pivotRadio'),
-                disp = document.getElementsByName('displayCheckbox');
-
-            for (var i = 0, length = queryCols.length; i < length; i++) {
-                if (agg[i].checked) {
-                    queryCols[i].agg = true;
-                }
-                if (pvt[i].checked) {
-                    queryCols[i].pivot = true;
-                }
-                if (disp[i].checked) {
-                    queryCols[i].display = true;
-                }
-            }
-            document.getElementById("pivottext").value = pivot.pivotQuery(queryCols, document.getElementById("valuestext").value, document.getElementById("querytext").value, document.getElementById("aggselect").value);
-            textAreaAdjust(document.getElementById("pivottext"));
-        };
-
-        function getCheckedElement(elementName) {
-            var el = document.getElementsByName(elementName),
-                returnEl;
-
-            for (var i = 0, length = el.length; i < length; i++) {
-                if (el[i].checked) {
-                    returnEl = el[i];
-                    break;
-                }
-            }
-            return returnEl;
-        };
-
-        function getCheckedElement(elementName) {
-            var el = document.getElementsByName(elementName),
-                returnEl;
-
-            for (var i = 0, length = el.length; i < length; i++) {
-                if (el[i].checked) {
-                    returnEl = el[i];
-                    break;
-                }
-            }
-            return returnEl;
-        };
-
-        function prevSelection(element) {
-            prevElement = $("[name=" + element.name + "]:checked")[0];
-        };
-
-        function swapAggPivotChecked(element) {
-            var sameVal = checkSameValue('pivotRadio', 'aggRadio')
-            $("[name=displayCheckbox][value=" + element.value + "]")[0].checked = false;
-            if (element.name === 'pivotRadio') {
-                if (sameVal) {
-                    selectAggMove($("[name=aggRadio][value=" + prevElement.value + "]")[0]);
-                }
-            }
-            else {
-                if (sameVal) {
-                    $("[name=pivotRadio][value=" + prevElement.value + "]")[0].checked = true;
-                }
-                selectAggMove(element);
-            }
-        };
-
-        function checkSameValue(pivotName, aggName) {
-            var pivotEl = $("[name=" + pivotName + "]:checked").val(),
-                aggEl = $("[name=" + aggName + "]:checked").val(),
-                returnVal = false;
-
-            if (pivotEl === aggEl) {
-                returnVal = true;
-            }
-            return returnVal;
-        };
-
-        function selectAggMove(radio) {
-            var parentTarget = radio.parentNode,
-                parentSource = document.getElementById('aggSelectDiv').parentNode,
-                sourceValue = radio.value;
-
-            $("#aggSelectDiv").appendTo(parentTarget);
-            $(radio).appendTo(parentSource);
-            document.getElementById('aggSelectRadio').checked = true;
-            radio.value = document.getElementById('aggSelectRadio').value;
-            document.getElementById('aggSelectRadio').value = sourceValue;
-        }
-
-        function textAreaAdjust(o) {
-            o.style.height = "1px";
-            o.style.height = (25 + o.scrollHeight) + "px";
-        }
 
     </script>
 </body>

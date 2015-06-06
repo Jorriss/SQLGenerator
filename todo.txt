@@ -43,12 +43,12 @@ Tasks
 - Ignore blank lines in Query
 - Google Analytics.
 - Fav Icon (index, about)
-- Change DOM Functions to Revaealing Prototype Pattern
+- Add Event Listeners for generated HTML
 
 - Parse column_name = syntax
 - All values for pivot (Aaron solution)
 - Video on how pivot tables work.
-- ORDER BY
+- ORDER BY?
 - Add unit testing
 - Use template for Table?
 - Media query to change panel height when horizontal
@@ -76,4 +76,5 @@ DONE
 - Add version number
 - Add copy pivot query button
 - No/One Columns found validation.
+- Change DOM Functions to Revaealing Prototype Pattern
 

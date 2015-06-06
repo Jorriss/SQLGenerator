@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -80,7 +80,11 @@
     <script src="js/sqlgen.js"></script>
    
     <script>
-        versionNumber();
+        var sqlGen;
+
+        sqlGen = new SqlGen();
+
+        sqlGen.versionNumber(document.getElementById("versionNumber"));
     </script>
 </body>
 </html>
