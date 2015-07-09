@@ -7,17 +7,34 @@ var PivotGen = function () {
 PivotGen.prototype = (function () {
     "use strict";
 
-    var replaceEndLine = function (text) {
-        return text.replace(/\n/g, " ");
+    var replaceEndLine = function (text, newValue) {
+        return text.replace(/\n/g, newValue);
     },
         replaceBlankLine = function (text) {
             text = text.replace(/^\s*[\r\n]/gm, "");
             return text.replace(/[\r\n]?\s*$/gm, "");
         },
         
-        scrubQueryText = function (text) {
-            return replaceEndLine(replaceBlankLine(text));
+        replaceCTE = function (text) { 
+            return text.replace(getCTE(text), "");
         },
+        
+        scrubQueryText = function (text) {
+            return replaceCTE(replaceEndLine(replaceBlankLine(text), " "));
+        },
+
+		getCTE = function(text) {
+			var exp =  /^(WITH\s\w.*\).*)SELECT/gm,
+			    match = exp.exec(text),
+				returnValue = "";
+
+	        if (match != null) {
+    	        returnValue = match[1];
+       		} else {
+            	returnValue = "";
+        	}			
+	 		return returnValue;
+		},
 
         getSelectColumns = function (query) {
             var exp = /SELECT\s*(.*)\s*FROM/im,
@@ -177,7 +194,7 @@ PivotGen.prototype = (function () {
                     if (escape) {
                         display += "[";
                     }
-                    display += columns[i].name
+                    display += columns[i].name;
                     if (escape) {
                         display += "]";
                     }
@@ -201,18 +218,21 @@ PivotGen.prototype = (function () {
 
         getPivotQuery = function (columns, pivotValues, query, aggType) {
             var values = getPivotValues(pivotValues),
-                pivot = "";
-
+                pivot = "",
+                queryScrub = "";
+                
+            queryScrub = replaceEndLine(replaceBlankLine(query), "!~");
+            pivot += getCTE(queryScrub).replace(/!~/gm, "\n") + "\n";
             pivot += "SELECT " + getPivotColDisplay(columns, true) + values + "\n";
             pivot += "FROM (\n";
-            pivot += replaceBlankLine(query) + "\n";
+            pivot += replaceCTE(queryScrub).replace(/!~/gm, "\n") + "\n";
             pivot += ") AS sourceTable\n";
             pivot += "PIVOT (\n";
             pivot += "  " + aggType.toUpperCase() + "(sourceTable." + getPivotColAgg(columns) + ")\n";
             pivot += "  FOR sourceTable." + getPivotColPivot(columns) + " IN (" + values + ")\n";
             pivot += ") AS pivotTable;\n";
 
-            return pivot;
+            return replaceBlankLine(pivot);
         };
         
     return {

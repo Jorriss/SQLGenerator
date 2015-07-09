@@ -7,7 +7,7 @@ SqlGen.prototype = (function() {
     "use strict";
 
     var versionNumber = function(element) {
-        element.innerHTML = '0.1.0';
+        element.innerHTML = '0.1.3';
     },
     
     showElement = function (name, show) {

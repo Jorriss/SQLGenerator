@@ -45,6 +45,7 @@ Tasks
 - Fav Icon (index, about)
 - Add Event Listeners for generated HTML
 
+- Validate empty column names
 - Parse column_name = syntax
 - All values for pivot (Aaron solution)
 - Video on how pivot tables work.
